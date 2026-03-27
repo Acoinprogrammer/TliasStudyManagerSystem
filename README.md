@@ -1,2 +1,0 @@
-# Tlias-
- 【Tlias智能辅助系统】基于Springboot+Redis+传统Vue+JS+Axios+HTML+CSS+Redis+RabbitMQ+Jwt令牌+拦截器Interceptor+AOP+Restful+ OSS对象存储+natapp内网穿透+（cpolar内网穿透uniapp手机界面，后续跟上开源）的全栈跨平台单体架构项目
