@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入 Element Plus 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <!-- 引入 Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 引入 Element Plus -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <!-- 引入图标库 -->
+<!--    <script src="https://unpkg.com/@element-plus/icons-vue"></script>-->
+    <!-- 引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入中文语言 -->
+    <script src="https://unpkg.com/element-plus/dist/locale/zh-cn.mjs"></script>
+    <!-- 引入vue-router -->
+    <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-table :data="tableData" border style="width: 100%">
+        <el-table-column prop="id" label="Id" width="180" align="center"></el-table-column>
+        <el-table-column prop="name" label="Name" width="180" align="center"></el-table-column>
+        <el-table-column prop="createTime" label="CreateTime" width="180" align="center"></el-table-column>
+        <el-table-column prop="updateTime" label="UpdateTime" width="180" align="center"></el-table-column>
+    </el-table>
+</div>
+</body>
+<script>
+    const {createApp} = Vue
+    const app = createApp({
+        data(){
+            return{
+                message:"Hello ElementPlus",
+                tableData:[]
+            }
+        },
+        methods:{
+
+        },
+        mounted(){
+            console.log(this.message)
+            axios.get("http://localhost:8080/GetAllDept").then(result=>{this.tableData=result.data.data})
+        }
+    })
+    app.use(ElementPlus,{locale :zhCn}).mount("#app")
+</script>
+</html>

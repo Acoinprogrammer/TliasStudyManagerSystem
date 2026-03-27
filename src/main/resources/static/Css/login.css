@@ -1,0 +1,11 @@
+body{
+    background-image: url("https://tlias-manager-system-house.oss-cn-beijing.aliyuncs.com/739fd229-56e2-4fba-95ac-3d93a6cd3961.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size:cover;
+}
+html,body{
+    margin: 0;
+    padding:0;
+}

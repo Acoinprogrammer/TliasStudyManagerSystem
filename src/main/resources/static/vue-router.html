@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+    <meta charset="UTF-8">
+    <title>Tlias智能管理系统</title>
+    <link rel="icon" href="https://tlias-manager-system-house.oss-cn-beijing.aliyuncs.com/739fd229-56e2-4fba-95ac-3d93a6cd3961.jpg" />
+    <!-- 引入 Element Plus 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link rel="stylesheet" href="Css/header.css">
+    <!-- 引入 Vue 3 -->
+<!--    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>-->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- 引入 Element Plus -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <!-- 引入图标库 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    <!-- 引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入中文语言 -->
+    <script src="https://unpkg.com/element-plus/dist/locale/zh-cn.js"></script>
+    <!-- 引入vue-router -->
+    <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+</head>
+<style>* {margin: 0;padding :0;}</style>
+<style>
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        width: 100px;
+        height: 100px;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #409eff;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 100px;
+        height: 100px;
+        display: block;
+        object-fit: cover;
+    }
+
+    /* 多文件上传样式 */
+    .upload-demo .el-upload--picture-card {
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+    }
+</style>
+<!--<el-icon><SwitchButton 退出登录 /></el-icon>-->
+<!--<el-icon><EditPen 修改密码 /></el-icon>-->
+<!--<el-icon><HomeFilled 班级管理 /></el-icon>-->
+<!--<el-icon><Promotion 首页 /></el-icon>-->
+<!--<el-icon><User /></el-icon>-->
+<!--<el-icon><UserFilled 学员管理 /></el-icon>-->
+<!--<el-icon><Menu 班级学员管理 /></el-icon>-->
+<!--<el-icon><Avatar 员工管理 /></el-icon>-->
+<!--<el-icon><HelpFilled 部门管理 /></el-icon>-->
+<!--<el-icon><Tools 系统信息管理 /></el-icon>-->
+<!--<el-icon><Histogram 数据统计管理 /></el-icon>-->
+<!--<el-icon><InfoFilled 员工信息统计 /></el-icon>-->
+<!--<el-icon><Share 学员信息统计 /></el-icon>-->
+<!--<el-icon><List 日志信息统计 /></el-icon>-->
+<!-- <el-icon><Plus /></el-icon> -->
+<body>
+<div id="app">
+    <div class="common-layout">
+        <el-container class="contain">
+            <el-header class="Header">
+                <div class="header-left">Tlias智能管理系统</div>
+                <el-button type="warning" class="header-modify" :icon="EditPen" size="large" @click="PutPassword">修改密码</el-button>
+                <el-dialog v-model="putpassword" width="310px" style="height: 300px">
+                    <p style="font-size: 20px;color: darkorange" align="center">密码修改</p>
+                    <p style="font-size: 20px;margin-top: 10px;color: darkorange" align="center">当前用户:{{getaccountFlag()}}</p>
+                    <el-input style="margin-top: 20px;height: 35px" v-model="password" placeholder="请输入新密码"></el-input>
+                    <el-input style="margin-top: 20px;height: 35px" v-model="npassword" placeholder="请再次输入新密码"></el-input>
+                    <el-button style="margin-left: 50px;margin-top: 20px" type="primary" :loading="confirmputpassword" @click="confirmPutPassword">确认</el-button>
+                    <el-button style="margin-left: 60px;margin-top: 20px" type="info" @click="putpassword=false">取消</el-button>
+                </el-dialog>
+                <el-button type="info" class="header-exit" :icon="SwitchButton" size="large" @click="ExitLogin">退出登录</el-button>
+                <el-dialog v-model="exitlogin" width="310px">
+                    <p style="font-size:20px;color: orangered" align="center">是否退出登陆?</p>
+                    <div style="margin-top: 30px">
+                    <el-button style="margin-left: 50px" @click="confirmExit" type="primary" :loading="confirmloading">确认</el-button>
+                    <el-button style="margin-left: 60px" @click="exitlogin=false" type="info">取消</el-button>
+                    </div>
+                </el-dialog>
+            </el-header>
+            <el-container height="100%">
+                <el-aside class="Aside" width="220px">
+                    <el-menu router>
+                        <el-menu-item index="/index">
+                            <el-icon><el-icon><component :is="Promotion" /></el-icon></el-icon> 首页
+                        </el-menu-item>
+                        <el-sub-menu index="/clastu">
+                            <template #title><el-icon><component :is="Menu" /></el-icon>班级学员管理</template>
+                            <el-menu-item index="/class"><el-icon><component :is="HomeFilled" /></el-icon>班级管理</el-menu-item>
+                            <el-menu-item index="/students"><el-icon><component :is="UserFilled" /></el-icon>学员管理</el-menu-item>
+                        </el-sub-menu>
+                        <el-sub-menu index="/system">
+                            <template #title><el-icon><component :is="Tools" /></el-icon>系统信息管理</template>
+                            <el-menu-item index="/dept"><el-icon><component :is="HelpFilled" /></el-icon>部门管理</el-menu-item>
+                            <el-menu-item index="/employee"><el-icon><component :is="Avatar" /></el-icon>员工管理</el-menu-item>
+                        </el-sub-menu>
+                        <el-sub-menu index="/data">
+                            <template #title><el-icon><component :is="Histogram" /></el-icon>数据统计管理</template>
+                            <el-menu-item index="/empdata"><el-icon><component :is="InfoFilled" /></el-icon>员工信息统计</el-menu-item>
+                            <el-menu-item index="/studata"><el-icon><component :is="Share" /></el-icon>学员信息统计</el-menu-item>
+                            <el-menu-item index="/logdata"><el-icon><component :is="List" /></el-icon>日志信息统计</el-menu-item>
+                        </el-sub-menu>
+                    </el-menu>
+                </el-aside>
+                <el-main class="Main">
+                    <router-view>
+                    </router-view>
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="https://assets.pyecharts.org/assets/v6/echarts.min.js"></script>
+<script>
+    const {createApp} = Vue
+    const {SwitchButton,EditPen,HomeFilled,Promotion,UserFilled,Menu,Avatar,HelpFilled,Tools,Histogram,InfoFilled,Share,List,Plus,ElMessage,ElLoading} = ElementPlusIconsVue
+    const {createRouter,createWebHashHistory} = VueRouter
+    const router = createRouter({
+        history: createWebHashHistory(),
+        routes: [
+            {path:"/",redirect:"/index"},
+            {path:"/index", name:"index", component:()=>import("./Views/index.js")},
+            {path:"/class", name:"class", component:()=>import("./Views/class.js"),props: {"Plus":Plus,"message": ElMessage}},
+            {path:"/students", name:"students", component:()=>import("./Views/students.js"),props:{"Plus":Plus,"message": ElMessage}},
+            {path:"/dept", name:"dept", component:()=>import("./Views/dept.js")},
+            {path:"/employee",name:"employee",component:()=>import("./Views/employee.js"),props:{"Plus":Plus,"message": ElMessage,"ElLoading":ElLoading}},
+            {path:"/empdata", name:"empdata", component:()=>import("./Views/empdata.js"),props:{"Plus":Plus,"message": ElMessage}},
+            {path:"/studata", name:"studata", component:()=>import("./Views/studata.js"),props:{"Plus":Plus,"message": ElMessage}},
+            // {path:"/logdata", name:"logdata", component:()=>import("Views/logdata.js")}
+        ]
+    })
+    const app = createApp({
+        data(){
+            return{
+                exitlogin:false,
+                confirmloading:false,
+                putpassword:false,
+                confirmputpassword:false,
+                password:"",
+                npassword:"",
+
+                message:"Hello ElementPlus And Router",
+                sameurl:"http://r324c74e.natappfree.cc",
+                SwitchButton,EditPen, HomeFilled, Promotion, UserFilled, Menu,Avatar,HelpFilled,Tools,Histogram,InfoFilled,Share,List,Plus,ElMessage,ElLoading
+            }
+        },
+        mounted(){
+            // this.ValidStatus();
+        },
+        methods:{
+            sleep(time){return new Promise(resolve => setTimeout(resolve,time));},
+            async ValidStatus() {
+                const ntoken = localStorage.getItem("token"),naccountFlag= localStorage.getItem("accountFlag");
+                try {const result = await axios.get(this.sameurl + "/health", {
+                        headers: {
+                            "token": ntoken,
+                            "accountFlag": naccountFlag
+                        }
+                    });
+                }catch(e){
+                    console.log(e);
+                    if (e.response.status === 403) {
+                        this.$message({
+                            "message":e.response.data,
+                            "type":"error",
+                            "duration":1000
+                        });
+                        await this.sleep(1000);
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("accountFlag");
+                        window.location.href='http://r324c74e.natappfree.cc/login.html'
+                    }
+                }
+            },
+            ExitLogin(){this.exitlogin=true;},
+            async confirmPutPassword(){
+                if(!this.password || !this.npassword){
+                    this.$message.warning("输入的两次密码不为空");
+                    return;
+                }
+                if(this.password.length<10 || this.password.length>20 ||
+                this.npassword.length<10 || this.npassword.length>20){
+                    this.$message.warning("输入的两次密码长度应在10~20内并且相等");
+                    return;
+                }
+                if(this.password!==this.npassword){
+                    this.$message.warning("输入的两次密码需相等");
+                    return;
+                }
+                await this.ValidStatus();
+                this.confirmputpassword=true;
+                try{
+                    const result = await axios.put(this.sameurl+"/PutAccount",null,{"params":{"accountFlag":localStorage.getItem("accountFlag"),"password":this.npassword}})
+                    if(result.data.code===200){this.$message({
+                        "message":"修改成功,重新登陆中...",
+                        "type":"success",
+                        "duration":1000
+                    });
+                    }
+                    else{
+                        this.$message({
+                            "message":"未知的异常,重新登陆中...",
+                            "type":"success",
+                            "duration":1000
+                        });
+                        console.log(result);
+                    }
+                }catch(e){this.$message({
+                    "message":"服务器异常,重新登陆中...",
+                    "type":"success",
+                    "duration":1000
+                });} finally {
+                    this.confirmputpassword=false;
+                    await this.sleep(1200);
+                    this.putpassword=false;
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("accountFlag");
+                    window.location.href = 'login.html';
+                }
+            },
+            async confirmExit(){
+                this.confirmloading=true;
+                localStorage.removeItem("token");
+                localStorage.removeItem("accountFlag");
+                await this.sleep(1000);
+                this.confirmloading=false;
+                window.location.href = 'login.html';
+            },
+            PutPassword(){this.putpassword=true;},
+            getaccountFlag(){return localStorage.getItem("accountFlag");}
+        }
+    })
+    app.use(router).use(ElementPlus,{ locale: ElementPlusLocaleZhCn }).mount("#app")
+</script>
+</html>

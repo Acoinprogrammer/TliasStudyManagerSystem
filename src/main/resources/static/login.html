@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tlias智能学习辅助系统登陆</title>
+    <link rel="icon" href="Image/login/aside.webp" />
+    <!-- 引入 Element Plus 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <!-- 引入自定义样式 -->
+    <link rel="stylesheet" href="Css/login.css">
+    <!-- 引入 Vue 3 -->
+    <!--    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>-->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- 引入 Element Plus -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <!-- 引入图标库 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    <!-- 引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入中文语言 -->
+    <script src="https://unpkg.com/element-plus/dist/locale/zh-cn.js"></script>
+    <!-- 引入vue-router -->
+    <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+</head>
+<style>
+</style>
+<body>
+<div id="app">
+    <el-card style="width: 750px;height: 430px;opacity:0.965;margin: 180px auto 0 auto;border-radius: 13px">
+        <el-container>
+            <el-aside style="width: 40%;height: 390px;border-right: 3px solid black;background:url('Image/login/aside.webp') no-repeat;background-size: 282px 390px">
+<!--                <img src="../static/Image/login/aside.webp"-->
+<!--                     style="width: 99%;height: 360px;padding: 0;margin-top: 5px;margin-left: 3px">-->
+            </el-aside>
+            <el-main style="width: 60%;height: 370px;padding: 0 !important;">
+                <div style="margin-left: 20px">
+                    <h1 style="color: royalblue;font-size: 35px;font-family: 微軟正黑體;font-weight: bold;text-align: center">tlias智能管理系统</h1>
+                    <div style="margin-left: 13px;margin-top: 35px;">
+                        <el-icon :size="32" style="margin-top:8px;float: left"><component :is="User"/></el-icon>
+                        <input v-model="name" placeholder="请输入账号" style="width: 78%;margin-left: 15px;height:50px;background-color: darkgray;border: 0;border-radius: 9px;padding: 0 0 0 10px">
+                    </div>
+                    <div style="margin-left: 13px;margin-top: 50px;">
+                        <el-icon :size="32" style="margin-top:8px;float: left"><component :is="Lock"/></el-icon>
+                        <input v-model="password" placeholder="请输入密码" style="width: 78%;margin-left: 15px;height:50px;background-color: darkgray;border: 0;border-radius: 9px;padding: 0 0 0 10px">
+                    </div>
+                    <div style="margin-left: 20px;margin-top: 50px">
+                        <el-button type="primary" style="width: 83px;height: 43px;float: left;margin-left: 65px" @click="login" :loading="loginloading">登陆</el-button>
+                        <el-button type="success" style="width: 83px;height: 43px;float:left;margin-left: 75px" @click="register">注册</el-button>
+                        <el-dialog v-model="regis" style="width: 300px;height: 300px">
+                            <h1 style="color:green;padding: 0;margin: 0" align="center" >账号注册</h1>
+                            <el-row style="margin-top: 20px">
+                                <el-col :span="4">
+                                    <el-icon style="margin-top: 8px;" size="25"><component :is="User"/></el-icon>
+                                </el-col>
+                                <el-col :span="9">
+                                    <el-input placeholder="请输入账号" style="width: 200px;height: 40px" v-model="regisName"></el-input>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 20px">
+                                <el-col :span="4">
+                                    <el-icon style="margin-top: 8px;" size="25"><component :is="Lock"/></el-icon>
+                                </el-col>
+                                <el-col :span="9">
+                                    <el-input placeholder="请输入密码" style="width: 200px;height: 40px" v-model="regisPassword"></el-input>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 30px">
+                            <el-col :span="10" style="margin-left: 47px"><el-button type="success" @click="registers" :loading="regisloading">注册</el-button></el-col>
+                            <el-col :span="7"><el-button type="info" @click="cancel">取消</el-button></el-col>
+                            </el-row>
+                        </el-dialog>
+                    </div>
+                </div>
+            </el-main>
+        </el-container>
+    </el-card>
+</div>
+</body>
+<script>
+    const {createApp} = Vue;
+    const {SwitchButton,EditPen,HomeFilled,Promotion,UserFilled,Menu,Avatar,HelpFilled,Tools,Histogram,InfoFilled,Share,List,Plus,ElMessage,ElLoading,User,Lock,LockFilled} = ElementPlusIconsVue
+    const app = createApp({
+        data(){
+            return{
+                name:'',
+                password:'',
+                loginloading:false,
+                IsLogin:false,
+
+                SwitchButton,EditPen,HomeFilled,Promotion,Menu,Avatar,HelpFilled,Tools,Histogram,InfoFilled,Share,List,Plus,ElMessage,ElLoading,User,UserFilled,Lock,LockFilled,
+                sameurl:"http://r324c74e.natappfree.cc",
+
+                regis:false,
+                regisName:'',
+                regisPassword:'',
+                regisloading:false,
+            }
+        },
+        methods:{
+            sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms));},//等待函数
+            register(){this.regis=true;},
+            async login(){
+                this.loginloading=true;
+                const nameLen = this.name.length,passwordLen = this.password.length;
+                if(nameLen===0){
+                    await this.sleep(200);
+                    this.$message.warning("请输入账号");
+                    this.loginloading=false;
+                    return;
+                }
+                if(passwordLen===0){
+                    await this.sleep(200);
+                    this.$message.warning("请输入密码");
+                    this.loginloading=false;
+                    return;
+                }
+                if(nameLen<10 || nameLen>20){
+                    await this.sleep(200);
+                    this.$message.warning("账号长度在10~20内");
+                    this.loginloading=false;
+                    return;
+                }
+                if(passwordLen<10 || passwordLen>20){
+                    await this.sleep(200);
+                    this.$message.warning("密码长度在10~20内");
+                    this.loginloading=false;
+                    return;
+                }
+                try {
+                    const result = await axios.get(this.sameurl + "/login",{params:{"accountFlag":this.name,"password":this.password}});
+                    if (result.data.code === 200) {
+                        this.$message.success("登陆成功");
+                        await this.sleep(1500);
+                        localStorage.setItem("accountFlag", this.name);
+                        localStorage.setItem("token", result.data.token);
+                        window.location.pathname = "vue-router.html";
+                    } else {result.data.code===400?this.$message.warning(result.data.message):this.$message.error(result.data.message);}
+                }catch(e){
+                    this.$message.warning("服务器繁忙,请稍后再试");
+                    console.log(e);
+                }finally{this.loginloading=false;}
+                this.name="";
+                this.password="";
+            },
+            async registers(){
+                this.regisloading=true;
+                const nameLen = this.regisName.length;
+                const passwordLen = this.regisPassword.length;
+                if(nameLen===0 || passwordLen===0){
+                    await this.sleep(200);
+                    this.regisloading=false;
+                    this.$message.warning("账号和密码不能为空");
+                    return;
+                }
+                if((nameLen<10 || nameLen>20)){
+                    await this.sleep(200);
+                    this.regisloading=false;
+                    this.$message.warning("账号长度在10~20内");
+                    return;
+                }
+                if((passwordLen<10 || passwordLen>20)){
+                    await this.sleep(200);
+                    this.regisloading=false;
+                    this.$message.warning("密码长度在10~20内");
+                    return;
+                }
+                try {
+                    const result = await axios.post(this.sameurl+"/registers",{"accountFlag":this.regisName,"password":this.regisPassword});
+                    if(result.data.code===200){this.$message.success("注册成功");}
+                    else{this.$message.error(result.data.code===400?"服务器繁忙,请稍后尝试":result.data.message);}
+                }catch(e) {
+                    this.$message.error("服务器出错");
+                    console.log(e);
+                }finally{
+                    this.regisName='';
+                    this.regisPassword='';
+                    this.regisloading=false;
+                    this.regis=false;
+                }
+            },
+            cancel(){
+                this.regisloading=false;
+                this.regis=false;
+            }
+        },
+        mounted(){
+
+        }
+    })
+    app.use(ElementPlus,{ locale: ElementPlusLocaleZhCn }).mount("#app")
+</script>
+</html>

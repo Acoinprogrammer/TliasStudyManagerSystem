@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 引入 Element Plus 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link rel="stylesheet" href="Css/header.css">
+    <!-- 引入 Vue 3 -->
+    <!--    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>-->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- 引入 Element Plus -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <!-- 引入图标库 -->
+    <script src="https://unpkg.com/@element-plus/icons-vue"></script>
+    <!-- 引入axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入中文语言 -->
+    <script src="https://unpkg.com/element-plus/dist/locale/zh-cn.js"></script>
+    <!-- 引入vue-router -->
+    <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-upload id="imgupload" ref="uploadRef" :http-request="UploadSubmit" :auto-upload="false" :on-change="HandleFileChange" list-type="picture-card"
+    :limit="1">
+        <el-icon><component :is="Plus" /></el-icon>
+    </el-upload>
+    <el-button type="success" size="small" @click="HandleUpload">上传</el-button>
+</div>
+</body>
+<script>
+    const {createApp} = Vue;
+    const {SwitchButton,EditPen,HomeFilled,Promotion,UserFilled,Menu,Avatar,HelpFilled,Tools,Histogram,InfoFilled,Share,List,Plus} = ElementPlusIconsVue
+    const app = createApp({
+        data(){
+            return{
+                uploadRef:null,
+                selectedFile:null,
+                fileName:'',
+                SwitchButton,EditPen,HomeFilled,Promotion,UserFilled,Menu,Avatar,HelpFilled,Tools,Histogram,InfoFilled,Share,List,Plus
+            }
+        },
+        methods:{
+            HandleFileChange(file){
+                console.log(file)
+                this.selectedFile=file.raw;
+                this.fileName=file.name;
+            }
+            ,
+            UploadSubmit(options){
+                console.log('提交')
+                const formData = new FormData()
+                formData.append('file',options.file)
+                console.log(formData)
+                console.log(formData.get('file'))
+            },
+            HandleUpload(){
+                console.log('uploadRef:',this.$refs.uploadRef)
+                if(this.$refs.uploadRef && this.selectedFile){this.$refs.uploadRef.submit()
+                }else{window.alert('请先选择文件')}
+            }
+        },
+        mounted(){
+        }
+    })
+    app.use(ElementPlus,{ locale: ElementPlusLocaleZhCn }).mount("#app")
+</script>
+</html>

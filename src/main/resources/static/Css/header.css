@@ -1,0 +1,24 @@
+.Header {
+    background-image: url("../Image/loading/header.png");
+    background-size: 100% 100%;
+    height:90px;
+}
+/*.Aside {border:1px solid blue;height:100%;}*/
+.Main {height:100%;}/*border:1px solid green;*/
+.header-left{
+    color: darkgray ;
+    font-size: 50px;
+    font-family: 华文细黑,serif;
+    margin-top:6px;
+    margin-left: 10px;
+    float:left;
+}
+.Aside {
+    border-right: 1px solid darkgray;
+    height: calc(100vh - 90px);
+}
+.el-menu {
+    border-right: none;
+}
+.header-exit{margin-top: 23px;}
+.header-modify{margin-top: 23px;margin-left: 750px;margin-right: 21px;}
